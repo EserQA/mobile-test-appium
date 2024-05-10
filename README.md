@@ -1,14 +1,16 @@
-***To start appium***	 
+## Appium Quick Start Guide
+```bash
+Start Appium Server
 appium
-
-***To get listed emulator devices***	 
+-----------------------------------------------------
+List Emulator Devices
 adb devices
-
-***To get appPackage and appActivity***
+-----------------------------------------------------
+Get App Package and Activity
 adb shell dumpsys window windows | grep mFocusedApp
-
-***To get build version***	 
+-----------------------------------------------------
+Get Build Version
 adb shell dumpsys window windows | grep mFocusedApp
-
-***To verify the system***
+-----------------------------------------------------
+Verify System Configuration
 appium-doctor --android
