@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="OBSS Test Suite" verbose="1" parallel="classes" thread-count="5">
+    <test name="OBSS Assesment">
+        <classes>
+            <class name="com.app.MobileTest"/>
+            <class name="com.app.AppiumServerTest"/>
+        </classes>
+    </test>
+</suite>
