@@ -1,5 +1,5 @@
 ## Appium Quick Start Guide
-```bash
+```
 Start Appium Server
 appium
 -----------------------------------------------------
