@@ -2,14 +2,18 @@ package com.app;
 
 import com.google.common.collect.ImmutableList;
 import io.appium.java_client.AppiumBy;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
+import io.appium.java_client.touch.LongPressOptions;
+import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -122,6 +126,21 @@ public class AppiumServerTest {
         driver.quit();
         stopAppiumServer();
     }
+
+    @Test
+    public void test4() throws MalformedURLException {
+        startAppiumServer();
+        AutomatorOptions options = new AutomatorOptions();
+        driver = new AndroidDriver(new URL("http://127.0.0.1:4723/"), options.getApiDemosOptions());
+        driver.findElement(AppiumBy.accessibilityId("Views")).click();
+        driver.findElement(AppiumBy.accessibilityId("Expandable Lists")).click();
+        driver.findElement(AppiumBy.accessibilityId("1. Custom Adapter")).click();
+        WebElement dogNames = driver.findElement(By.xpath("//android.widget.TextView[@text='Dog Names']"));
+        driver.findElement(By.xpath("//android.widget.TextView[@text='Sample action']")).click();
+        waitForSeconds(1);
+        driver.quit();
+        stopAppiumServer();
+    }
     
     public static void longPress(WebElement element) {
         Point location = element.getLocation();
@@ -177,5 +196,40 @@ public class AppiumServerTest {
     public static void switchContext(int contextIndex) {
         String determinedContext = driver.getContextHandles().toArray()[contextIndex].toString();
         driver.context(determinedContext);
+    }
+
+    public static void dragAndDrop(WebElement source, WebElement target) {
+        Point sourceElementCenter = getCenterOfElement(source);
+        Point targetElementCenter = getCenterOfElement(target);
+        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+        Sequence dragAndDrop = new Sequence(finger, 0);
+        dragAndDrop.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), sourceElementCenter));
+        dragAndDrop.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        dragAndDrop.addAction(finger.createPointerMove(Duration.ofSeconds(1), PointerInput.Origin.viewport(), targetElementCenter));
+        dragAndDrop.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        driver.perform(ImmutableList.of(dragAndDrop));
+    }
+
+    public static void doubleTap(WebElement element) {
+        Point sourceElementCenter = getCenterOfElement(element);
+        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+        Sequence doubleTap = new Sequence(finger, 0);
+        doubleTap.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), sourceElementCenter));
+        doubleTap.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        doubleTap.addAction(new Pause(finger,Duration.ofMillis(100)));
+        doubleTap.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        doubleTap.addAction(new Pause(finger,Duration.ofMillis(100)));
+        doubleTap.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        doubleTap.addAction(new Pause(finger,Duration.ofMillis(100)));
+        doubleTap.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        driver.perform(ImmutableList.of(doubleTap));
+    }
+
+    public static Point getCenterOfElement(WebElement element) {
+        Point elementLocation = element.getLocation();
+        Dimension elementSize = element.getSize();
+        int centerX = elementLocation.getX() + (elementSize.width / 2);
+        int centerY = elementLocation.getY() + (elementSize.height / 2);
+        return new Point(centerX, centerY);
     }
 }
