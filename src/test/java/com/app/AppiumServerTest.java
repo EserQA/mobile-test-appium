@@ -136,6 +136,8 @@ public class AppiumServerTest {
         driver.findElement(AppiumBy.accessibilityId("Expandable Lists")).click();
         driver.findElement(AppiumBy.accessibilityId("1. Custom Adapter")).click();
         WebElement dogNames = driver.findElement(By.xpath("//android.widget.TextView[@text='Dog Names']"));
+        longPress(dogNames);
+        waitForSeconds(1);
         driver.findElement(By.xpath("//android.widget.TextView[@text='Sample action']")).click();
         waitForSeconds(1);
         driver.quit();
